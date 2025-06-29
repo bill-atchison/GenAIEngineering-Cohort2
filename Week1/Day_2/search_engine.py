@@ -62,6 +62,13 @@ def embed_text_chunks(chunks, embedding_model_name="all-MiniLM-L6-v2"):
 def build_faiss_index():
     files = glob.glob(os.path.join('csv_files', "*.csv"))
     print(files)
+    if not files:
+        print("No CSV files found to build FAISS index. Returning empty index.")
+        # The dimension for "all-MiniLM-L6-v2" is 384
+        dimension = 384
+        index = faiss.IndexFlatL2(dimension)
+        return index
+
     df = pd.concat((pd.read_csv(f) for f in files), ignore_index=True)
     print(len(df))
     embedding_model_name = "all-MiniLM-L6-v2"
